@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="YoigoAppSuite" parallel="false" >
+	<test name="LoginYoigoTest">
+		<parameter name="rutaArchivo" value="C:\Users\juan.zarate\Documents\Automatizacion\Data\DataAppYoigo.xls"/>
+		<parameter name="fuenteDatos" value="Excel"/>
+		<classes>
+			<class name="com.yoigo.app.seleniumwd.LoginYoigoTest" />
+			<methods>
+          		<include name="login" />
+          	</methods> 	
+		</classes>
+	</test>
+</suite>

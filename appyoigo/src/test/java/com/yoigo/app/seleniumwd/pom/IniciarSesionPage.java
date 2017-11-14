@@ -14,13 +14,13 @@ import io.appium.java_client.android.AndroidDriver;
 
 
 public class IniciarSesionPage {
-	private By botonIngresar = By.id("com.yoigo.movil:id/btnLogin");
+	private By botonIngresar = By.id("net.bfgnet.miandroigo:id/wbut_login");
 	private By botonAceptar = By.id("com.yoigo.movil:id/btnPositive");
 	private By botonPermitir = By.id("com.android.packageinstaller:id/permission_allow_button");
-	private By cajaUsuario = By.id("com.yoigo.movil:id/etNumber");
-	private By cajaClave = By.id("com.yoigo.movil:id/etPassword");
+	private By cajaUsuario = By.id("net.bfgnet.miandroigo:id/wlogin_user");
+	private By cajaClave = By.id("net.bfgnet.miandroigo:id/wlogin_pass");
 	private By mensajeRespuesta = By.id("com.yoigo.movil:id/txtMessage");
-	private By mensajeBienvenida = By.id("com.yoigo.movil:id/consumptions_greeting");
+	private By mensajeBienvenida = By.id("net.bfgnet.miandroigo:id/summary_app_name");
 	private AndroidDriver driver = null;
 	
 	public IniciarSesionPage() throws MalformedURLException, InterruptedException{
@@ -35,7 +35,7 @@ public class IniciarSesionPage {
 			Thread.sleep(3000);
 		}*/		
 //		boolean present;
-		try {
+/*		try {
 		   driver.findElement(botonPermitir).click();
 		   Thread.sleep(3000);
 //		   present = true;
@@ -43,7 +43,7 @@ public class IniciarSesionPage {
 //		   present = false;
 		}
 		driver.findElement(botonPermitir).click();
-		Thread.sleep(3000);
+		Thread.sleep(3000);*/
 		driver.findElement(cajaUsuario).clear();
 		driver.findElement(cajaUsuario).sendKeys(usuario);
 		driver.findElement(cajaClave).clear();
@@ -57,11 +57,12 @@ public class IniciarSesionPage {
 		Boolean isPresent = driver.findElements(mensajeRespuesta).size() > 0;
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
+		/*Captura el mensaje de respuesta en los escenarios de error*/
 		if (isPresent) {
 			String mensaje= driver.findElement(mensajeRespuesta).getText();
 			driver.findElement(botonAceptar).click();
 			return mensaje;
-			
+		/*si no hay error captura el mensaje de bienvenida*/	
 		}
 		else {
 			return driver.findElement(mensajeBienvenida).getText();
