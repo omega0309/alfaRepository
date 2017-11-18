@@ -1,5 +1,6 @@
 package com.yoigo.app.seleniumwd;
 
+import com.yoigo.app.seleniumwd.pom.CondicionesPage;
 import com.yoigo.app.seleniumwd.pom.IniciarSesionPage;
 import com.yoigo.app.util.Excel;
 import java.util.ArrayList;
@@ -12,14 +13,15 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 
- 
 public class LoginYoigoTest {
  
+	private CondicionesPage condicionesPage;
 	private IniciarSesionPage iniciarSesionPage;
 	
 	@BeforeTest
 	public void inicioClase() throws Exception {
-		iniciarSesionPage =new IniciarSesionPage();		
+		condicionesPage =new CondicionesPage();
+		iniciarSesionPage =new IniciarSesionPage(condicionesPage.getWebDriver());		
 	}
 
 	@DataProvider(name = "datosEntrada")
@@ -44,6 +46,7 @@ public class LoginYoigoTest {
 	@Test (dataProvider = "datosEntrada")
 	public void login(String usuario, String clave, String valorEsperado) throws Exception {
 		try {
+			condicionesPage.aceptarCondiciones();
 			String valorObtenido = iniciarSesionPage.iniciarSesion(usuario, clave);
 			Assert.assertEquals(valorEsperado , valorObtenido);
 		} catch (Exception e) {

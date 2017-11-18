@@ -1,6 +1,7 @@
 package com.yoigo.app.seleniumwd.pom;
 
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
@@ -10,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.yoigo.app.seleniumwd.pom.driver.appYoigoDriver;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 
@@ -17,16 +19,23 @@ public class IniciarSesionPage {
 	private By botonIngresar = By.id("net.bfgnet.miandroigo:id/wbut_login");
 	private By botonAceptar = By.id("com.yoigo.movil:id/btnPositive");
 	private By botonPermitir = By.id("com.android.packageinstaller:id/permission_allow_button");
+	private By botonRechazar = By.id("com.android.packageinstaller:id/permission_deny_button");
+	private By botonCerrarAlert = By.id("android:id/button2");
 	private By cajaUsuario = By.id("net.bfgnet.miandroigo:id/wlogin_user");
 	private By cajaClave = By.id("net.bfgnet.miandroigo:id/wlogin_pass");
 	private By mensajeRespuesta = By.id("com.yoigo.movil:id/txtMessage");
 	private By mensajeBienvenida = By.id("net.bfgnet.miandroigo:id/summary_app_name");
+	private By contenedorAyuda = By.id("net.bfgnet.miandroigo:id/help_container");
 	private AndroidDriver driver = null;
 	
 	public IniciarSesionPage() throws MalformedURLException, InterruptedException{
 		driver = appYoigoDriver.inicializarDriver();
 	}
 
+	public IniciarSesionPage(AndroidDriver driver) throws MalformedURLException, InterruptedException{
+		this.driver = driver;
+	}
+	
 	public String iniciarSesion(String usuario, String clave) throws Exception{	
 /*		if (isAlertPresent()) {
 			WebDriverWait wait = new WebDriverWait(driver, 3);
@@ -43,7 +52,8 @@ public class IniciarSesionPage {
 //		   present = false;
 		}
 		driver.findElement(botonPermitir).click();
-		Thread.sleep(3000);*/
+		Thread.sleep(3000);*/		
+	
 		driver.findElement(cajaUsuario).clear();
 		driver.findElement(cajaUsuario).sendKeys(usuario);
 		driver.findElement(cajaClave).clear();
@@ -64,8 +74,26 @@ public class IniciarSesionPage {
 			return mensaje;
 		/*si no hay error captura el mensaje de bienvenida*/	
 		}
-		else {
+		else { 
+			/*si aparece un pop up para conceder permisos*/
+			if (isPermisoAlertPresent()){
+				driver.findElement(botonRechazar).click();
+				Thread.sleep(3000);
+			}
+			/*si aparece un Hint pop up*/
+			if (isAlertPresent()){
+				driver.findElement(botonCerrarAlert).click();
+				Thread.sleep(3000);
+			}
+			
+			MobileElement parentElement = (MobileElement) driver.findElement(contenedorAyuda);
+			List<MobileElement> childElements = parentElement.findElements(By.className("android.widget.ImageView"));
+			//This is to get the 2th child element
+			MobileElement mainElement = childElements.get(0);
+			mainElement.click();
+			Thread.sleep(3000);
 			return driver.findElement(mensajeBienvenida).getText();
+			
 		}
 	}
 	
@@ -73,8 +101,8 @@ public class IniciarSesionPage {
 	{ 
 	    try 
 	    { 
-	        driver.switchTo().alert(); 
-	        return true; 
+	    	driver.findElement(botonCerrarAlert); 
+	        return true;  
 	    }   // try 
 	    catch (NoAlertPresentException Ex) 
 	    { 
@@ -86,7 +114,7 @@ public class IniciarSesionPage {
 	{ 
 	    try 
 	    { 
-	    	driver.findElement(botonAceptar); 
+	    	driver.findElement(botonPermitir); 
 	        return true; 
 	    }   // try 
 	    catch (NoAlertPresentException Ex) 
@@ -94,8 +122,7 @@ public class IniciarSesionPage {
 	        return false; 
 	    }   // catch 
 	}   // isAlertPresent()
-	
-	
+		
 	public void cerrarSesion(){
 		appYoigoDriver.terminarSesion(driver);
 	}

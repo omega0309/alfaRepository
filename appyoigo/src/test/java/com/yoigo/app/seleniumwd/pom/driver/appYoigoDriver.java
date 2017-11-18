@@ -21,7 +21,8 @@ public final class appYoigoDriver {
 		capabilities.setCapability("platformName", "Android");
 //		capabilities.setCapability("app", app.getAbsolutePath());
 		capabilities.setCapability("appPackage", "net.bfgnet.miandroigo");
-		capabilities.setCapability("appActivity", "net.bfgnet.miandroigo.activities.LoginActivity");
+		capabilities.setCapability("appActivity", "net.bfgnet.miandroigo.activities.MainViewActivity");
+//		capabilities.setCapability("autoGrantPermissions","true");
 		capabilities.setCapability("autoAcceptAlerts", true);
 
 		driver = new AndroidDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
